@@ -5,6 +5,7 @@ import br.com.sisdb.myfinances.exception.RegraNegocioException;
 import br.com.sisdb.myfinances.model.entity.Usuario;
 import br.com.sisdb.myfinances.repository.UsuarioRepository;
 import br.com.sisdb.myfinances.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 @Service
 public class UsuarioServiceImpl  implements UsuarioService {
 
+    @Autowired
     private UsuarioRepository repository;
 
     public UsuarioServiceImpl(UsuarioRepository repository) {

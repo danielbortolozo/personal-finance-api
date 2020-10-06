@@ -31,7 +31,7 @@ public class UsuarioRepositoryTest {
         Usuario usuario =criarUsuario();
         entityManager.persist(usuario);
         //ação/ execução
-        boolean result = repository.existsByEmail("daniel@fef.br");
+        boolean result = repository.existsByEmail("rod@rod.br");
         //Verificação
         Assertions.assertThat(result).isTrue();
     }

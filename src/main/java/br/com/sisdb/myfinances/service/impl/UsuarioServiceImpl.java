@@ -1,11 +1,14 @@
 package br.com.sisdb.myfinances.service.impl;
 
+import br.com.sisdb.myfinances.exception.ErroAutenticacao;
 import br.com.sisdb.myfinances.exception.RegraNegocioException;
 import br.com.sisdb.myfinances.model.entity.Usuario;
 import br.com.sisdb.myfinances.repository.UsuarioRepository;
 import br.com.sisdb.myfinances.service.UsuarioService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class UsuarioServiceImpl  implements UsuarioService {
@@ -18,7 +21,14 @@ public class UsuarioServiceImpl  implements UsuarioService {
 
     @Override
     public Usuario autenticar(String email, String senha) {
-        return null;
+        Optional<Usuario> usuario = repository.findByEmail(email);
+        if (!usuario.isPresent()){
+            throw new ErroAutenticacao("Email inválido(a).");
+        }
+        if (!usuario.get().getSenha().equals(senha)){
+            throw new ErroAutenticacao("Senha inválida.");
+        }
+        return usuario.get();
     }
 
     @Override

@@ -11,11 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
 
 import java.util.Optional;
 
@@ -42,20 +41,22 @@ public class UsuarioServiceTest {
         //verificar
         Assertions.assertThat(result).isNotNull();
     }
-    @Test(expected = ErroAutenticacao.class)
+    @Test
     public void deveLancarErroQuandoNaoEncontrarUsuarioCadastradoComEmailInformacao() {
        //cenario
         Mockito.when(usuarioRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
         //acao
-        usuarioService.autenticar("email@gmail.com", "senha");
+        Throwable exception = Assertions.catchThrowable(() -> usuarioService.autenticar("deniel@fef.br", "senha"));
+        Assertions.assertThat(exception).isInstanceOf(ErroAutenticacao.class).hasMessage("Email inválido(a).");
     }
-    @Test(expected = ErroAutenticacao.class)
+    @Test
     public void deveLancarErroQuandoSenhaNaoBatem() {
         //cenario
         Usuario usuario = Usuario.builder().email("daniel@fef.br").senha("senha").build();
         Mockito.when(usuarioRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(usuario));
         //acao
-        usuarioService.autenticar("daniel@fef.br", "123");
+       Throwable exception = Assertions.catchThrowable(() -> usuarioService.autenticar("daniel@fef.br", "'122"));
+       Assertions.assertThat(exception).isInstanceOf(ErroAutenticacao.class).hasMessage("Senha inválida.");
     }
 
     @Test(expected = Test.None.class)

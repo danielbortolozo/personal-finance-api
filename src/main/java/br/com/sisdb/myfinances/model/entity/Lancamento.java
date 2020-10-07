@@ -2,6 +2,10 @@ package br.com.sisdb.myfinances.model.entity;
 
 import br.com.sisdb.myfinances.enums.StatusLancamento;
 import br.com.sisdb.myfinances.enums.TipoLancamento;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import javax.persistence.*;
@@ -11,6 +15,10 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "lancamento", schema = "financas")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Lancamento implements Serializable {
 
     @Id

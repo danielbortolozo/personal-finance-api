@@ -5,6 +5,7 @@ import br.com.sisdb.myfinances.exception.RegraNegocioException;
 import br.com.sisdb.myfinances.model.entity.Usuario;
 import br.com.sisdb.myfinances.repository.UsuarioRepository;
 import br.com.sisdb.myfinances.service.UsuarioService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +15,18 @@ import java.util.Optional;
 @Service
 public class UsuarioServiceImpl  implements UsuarioService {
 
-    @Autowired
-    private UsuarioRepository repository;
 
-    public UsuarioServiceImpl(UsuarioRepository repository) {
+    private final UsuarioRepository repository;
+
+    @Autowired
+    public UsuarioServiceImpl(final UsuarioRepository repository) {
         this.repository = repository;
+
     }
+
+
+
+
 
     @Override
     public Usuario autenticar(String email, String senha) {
@@ -30,6 +37,8 @@ public class UsuarioServiceImpl  implements UsuarioService {
         if (!usuario.get().getSenha().equals(senha)){
             throw new ErroAutenticacao("Senha inválida.");
         }
+
+
         return usuario.get();
     }
 
@@ -37,16 +46,15 @@ public class UsuarioServiceImpl  implements UsuarioService {
     @Transactional
     public Usuario salvarUsuario(Usuario usuario) {
         validarEmail(usuario.getEmail());
+
         return repository.save(usuario);
     }
-
     @Override
     public void validarEmail(String email) {
         boolean existe = repository.existsByEmail(email);
         if (existe) {
             throw new RegraNegocioException("Já existe um usuário cadastrado com este email");
         }
-
     }
 }
 

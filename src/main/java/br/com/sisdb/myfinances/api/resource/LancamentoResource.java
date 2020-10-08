@@ -51,7 +51,6 @@ public class LancamentoResource {
     @PutMapping("{id}/atualizar-status")
     public ResponseEntity atualizaStatus(@PathVariable("id") Long id,   @RequestBody AtualizaStatusDTO dto ) {
 
-        System.out.println("Entrei aqui no status....<><<><><><><");
         return service.obterPorId(id).map(entity -> {
            StatusLancamento statusSelecionado = StatusLancamento.valueOf(dto.getStatus());
             if (statusSelecionado == null) {

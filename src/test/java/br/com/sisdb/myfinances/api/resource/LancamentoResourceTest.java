@@ -84,4 +84,29 @@ public class LancamentoResourceTest {
             ;
     }
 
+    @Test
+    public void deveSalvarUmUsuario() throws  Exception{
+        //cenario
+        String email = "daniel@fef.br";
+        String senha = "123";
+        UsuarioDTO dto = UsuarioDTO.builder().email(email).senha(senha).build();
+        Usuario usuario = Usuario.builder().id(1l).senha(senha).email(email).build();
+
+        Mockito.when(service.salvarUsuario(Mockito.any(Usuario.class))).thenReturn(usuario);
+        String json = new ObjectMapper().writeValueAsString(dto);
+        //execucao e verificacao
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(API)
+                .accept(JSON)
+                .contentType(JSON)
+                .content(json);
+        mvc
+                .perform(request)
+                .andExpect(MockMvcResultMatchers.status().isCreated() )
+                .andExpect(MockMvcResultMatchers.jsonPath("id").value(usuario.getId()) )
+                .andExpect(MockMvcResultMatchers.jsonPath("nome").value(usuario.getNome()) )
+                .andExpect(MockMvcResultMatchers.jsonPath("email").value(usuario.getEmail()) )
+        ;
+    }
+
 }

@@ -3,6 +3,7 @@ package br.com.sisdb.myfinances.api.resource;
 
 import br.com.sisdb.myfinances.api.UsuarioDTO;
 import br.com.sisdb.myfinances.exception.ErroAutenticacao;
+import br.com.sisdb.myfinances.exception.RegraNegocioException;
 import br.com.sisdb.myfinances.model.entity.Usuario;
 import br.com.sisdb.myfinances.service.LancamentoService;
 import br.com.sisdb.myfinances.service.UsuarioService;
@@ -108,5 +109,27 @@ public class LancamentoResourceTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("email").value(usuario.getEmail()) )
         ;
     }
+
+    @Test
+    public void deveDarBadRequestAoSalvarUmUsuario() throws  Exception{
+        //cenario
+        String email = "daniel@fef.br";
+        String senha = "123";
+        UsuarioDTO dto = UsuarioDTO.builder().email(email).senha(senha).build();
+
+        Mockito.when(service.salvarUsuario(Mockito.any(Usuario.class))).thenThrow(RegraNegocioException.class);
+        String json = new ObjectMapper().writeValueAsString(dto);
+        //execucao e verificacao
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(API)
+                .accept(JSON)
+                .contentType(JSON)
+                .content(json);
+        mvc
+                .perform(request)
+                .andExpect(MockMvcResultMatchers.status().isBadRequest() )
+              ;
+    }
+
 
 }
